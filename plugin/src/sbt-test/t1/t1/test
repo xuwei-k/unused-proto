@@ -11,5 +11,6 @@ $ exec git add -- src/
 $ exec git commit -am init
 
 > clean
+> set libraryDependencies += "io.grpc" % "grpc-services" % scalapb.compiler.Version.grpcJavaVersion % "protobuf-src"
 > unusedProtoWarn
-> checkGitInfoNonEmpty
+> checkGitInfo

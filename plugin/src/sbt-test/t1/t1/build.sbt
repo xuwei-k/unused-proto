@@ -7,13 +7,13 @@ libraryDependencies ++= Seq(
   "com.thesamet.scalapb" %% "scalapb-runtime-grpc" % scalapb.compiler.Version.scalapbVersion,
 )
 
-TaskKey[Unit]("checkGitInfoNonEmpty") := {
+TaskKey[Unit]("checkGitInfo") := {
   val x = (LocalRootProject / unusedProto).value.values
-  List(
+  val names = List(
     x.methods,
     x.enums,
     x.messages,
-  ).flatten.foreach { a =>
-    assert(a.gitInfo.exists(_.commit.nonEmpty), a)
-  }
+  ).flatten.filter(_.gitInfo.exists(_.commit.nonEmpty)).map(_.name).toSet
+  val expect = Set("RpcMethodName1", "RpcMethodName3", "Enum1", "A")
+  assert(names == expect, names)
 }
