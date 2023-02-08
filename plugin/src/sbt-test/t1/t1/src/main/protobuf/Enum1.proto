@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+package example;
+
+enum Enum1 {
+  ENUM_AAA = 0;
+  ENUM_BBB = 1;
+}

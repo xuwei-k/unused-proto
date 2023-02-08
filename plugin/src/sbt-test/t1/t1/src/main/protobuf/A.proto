@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package example;
+
+message A {
+  string xxx = 1;
+  int32 yyyy = 2;
+}
+
+message BBB {
+  bool zzzzz = 1;
+}

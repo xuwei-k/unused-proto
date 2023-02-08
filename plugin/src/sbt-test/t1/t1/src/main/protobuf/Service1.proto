@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package example;
+
+import "google/protobuf/empty.proto";
+
+service Service1 {
+  rpc RpcMethodName1(google.protobuf.Empty) returns (google.protobuf.Empty) {}
+}

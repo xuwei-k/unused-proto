@@ -1,0 +1,57 @@
+{
+  "values" : {
+    "methods" : [
+      {
+        "name" : "RpcMethodName1",
+        "path" : "src/main/protobuf/Service1.proto",
+        "location" : {
+          "start_line" : 7,
+          "start_column" : 2,
+          "end_line" : null,
+          "end_column" : 78
+        },
+        "git_info" : null
+      },
+      {
+        "name" : "RpcMethodName3",
+        "path" : "src/main/protobuf/Service2.proto",
+        "location" : {
+          "start_line" : 10,
+          "start_column" : 2,
+          "end_line" : null,
+          "end_column" : 78
+        },
+        "git_info" : null
+      }
+    ],
+    "messages" : [
+      {
+        "name" : "A",
+        "path" : "src/main/protobuf/A.proto",
+        "location" : {
+          "start_line" : 4,
+          "start_column" : 0,
+          "end_line" : 7,
+          "end_column" : 1
+        },
+        "git_info" : null
+      }
+    ],
+    "enums" : [
+      {
+        "name" : "Enum1",
+        "path" : "src/main/protobuf/Enum1.proto",
+        "location" : {
+          "start_line" : 4,
+          "start_column" : 0,
+          "end_line" : 7,
+          "end_column" : 1
+        },
+        "git_info" : null
+      }
+    ]
+  },
+  "log" : {
+    "warnings" : []
+  }
+}
