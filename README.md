@@ -10,7 +10,7 @@ addSbtPlugin("com.github.xuwei-k" % "unused-proto-plugin" % "latest version")
 
 ## `build.sbt`
 
-use `++=` or `+=` insted of `:=`.
+use `++=` or `+=` instead of `:=`.
 
 ```diff
 - Compile / PB.targets := Seq(
