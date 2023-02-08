@@ -267,7 +267,7 @@ object FindUnusedProtoPlugin extends AutoPlugin {
             val value = Seq[String](
               {
                 val base =
-                  s"${f.getCanonicalPath}:${x.location.startLine}:${x.location.startColumn}: unused ${key}."
+                  s"${f.getCanonicalPath}:${x.location.startLine + 1}:${x.location.startColumn + 1}: unused ${key}."
                 x.gitInfo.fold(base)(g => s"${base} last change date is ${g.date}. commit = ${g.commit}")
               },
               lines(x.location.startLine),

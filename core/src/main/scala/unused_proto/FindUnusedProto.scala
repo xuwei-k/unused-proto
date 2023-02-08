@@ -255,7 +255,7 @@ object FindUnusedProto {
           "-1",
           "--format=%cd",
           "--date=iso8601-strict",
-          s"-L${startLine},${endLine}:${file.getCanonicalPath}"
+          s"-L${startLine + 1},${endLine + 1}:${file.getCanonicalPath}"
         ),
         Some(base)
       ).lazyLines_!.head
@@ -265,7 +265,7 @@ object FindUnusedProto {
           "log",
           "-1",
           "--format=%H",
-          s"-L${startLine},${endLine}:${file.getCanonicalPath}"
+          s"-L${startLine + 1},${endLine + 1}:${file.getCanonicalPath}"
         ),
         Some(base)
       ).lazyLines_!.head
