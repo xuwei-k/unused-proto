@@ -4,9 +4,9 @@ $ must-mirror expect1.json target/unused_proto.json
 
 > compile
 
-$ exec git config --global user.email "unused-proto-test@example.com"
-$ exec git config --global user.name "unused-proto-test"
 $ exec git init
+$ exec git config --local user.email "unused-proto-test@example.com"
+$ exec git config --local user.name "unused-proto-test"
 $ exec git add -- src/
 $ exec git commit -am init
 
