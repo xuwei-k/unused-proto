@@ -7,6 +7,7 @@ import argonaut.JsonParser
 import argonaut.PrettyParams
 import java.io.File
 import java.nio.charset.StandardCharsets
+import java.nio.file.FileVisitOption
 import java.nio.file.Files
 import java.nio.file.Path
 import java.time.ZonedDateTime
@@ -20,6 +21,7 @@ import scala.meta.inputs.Input
 import scala.meta.parsers.Parse
 import scala.meta.transversers.XtensionCollectionLikeUI
 import scala.sys.process.Process
+import scala.util.chaining.*
 import unused_proto.UnusedProtoOutput.GitInfo
 import unused_proto.UnusedProtoOutput.Result
 
@@ -56,7 +58,7 @@ object FindUnusedProto {
     implicit val dialectDecoder: DecodeJson[Dialect] =
       implicitly[DecodeJson[String]].map(Dialect.map)
 
-    DecodeJson.jdecode7L(UnusedProtoInput.apply)(
+    DecodeJson.jdecode8L(UnusedProtoInput.apply)(
       UnusedProtoInput.keys._1,
       UnusedProtoInput.keys._2,
       UnusedProtoInput.keys._3,
@@ -64,6 +66,7 @@ object FindUnusedProto {
       UnusedProtoInput.keys._5,
       UnusedProtoInput.keys._6,
       UnusedProtoInput.keys._7,
+      UnusedProtoInput.keys._8,
     )
   }
 
@@ -180,27 +183,29 @@ object FindUnusedProto {
       throw e
   }
 
-  private def findProtoFile(base: String, f: UnusedProtoInput.Def): Either[String, File] = {
-    Files
-      .find(
-        new File(base).toPath,
-        32,
-        { (path, _) =>
-          path.toFile.isFile && (path.toFile.getName == f.fileName.split('/').last) && {
-            val lines = Files.readAllLines(path).asScala.lift
-            lines(f.location.startLine).exists(_ contains f.name)
-          }
-        }
-      )
-      .collect(Collectors.toList[Path]())
-      .asScala
-      .toList match {
-      case path :: Nil =>
-        Right(path.toFile)
+  private def findProtoFile(conf: UnusedProtoInput, f: UnusedProtoInput.Def): Either[String, List[File]] = {
+    val all = conf.protoDirectories.map(dir => new File(conf.baseDirectory, dir)).filter(_.isDirectory)
+    all.flatMap { dir =>
+      Files
+        .find(
+          dir.toPath,
+          32,
+          { (path, attributes) =>
+            attributes.isRegularFile && (path.toFile.getName == f.fileName.split('/').last) && {
+              val lines = Files.readAllLines(path).asScala.lift
+              lines(f.location.startLine).exists(_ contains f.name)
+            }
+          },
+          FileVisitOption.FOLLOW_LINKS,
+        )
+        .collect(Collectors.toList[Path]())
+        .asScala
+        .toList
+    } match {
       case Nil =>
         Left(s"not found ${f.name} ${f.fileName}")
       case values =>
-        Left(s"found multiple ${f.name} ${values} ${f.fileName}")
+        Right(values.map(_.toFile))
     }
   }
 
@@ -213,20 +218,25 @@ object FindUnusedProto {
       .filterNot(x => namesInScala.contains(x.name))
       .map { value =>
         val name = value.name
-        findProtoFile(base = conf.baseDirectory, f = value).map { file =>
-          val info = gitInfo(
-            file = file,
-            startLine = value.location.startLine,
-            endLine = value.location.getEndLine,
-            conf = conf,
-          )
-          val path =
-            IO.relativize(new File(conf.baseDirectory), file)
-              .getOrElse(sys.error(s"invalid path ${file.getCanonicalPath}"))
-          Result(name = name, path = path, location = value.location, gitInfo = info)
+        findProtoFile(conf = conf, f = value).map { files =>
+          files.map { file =>
+            val info = gitInfo(
+              file = file,
+              startLine = value.location.startLine,
+              endLine = value.location.getEndLine,
+              conf = conf,
+            )
+            val path =
+              IO.relativize(new File(conf.baseDirectory), file.getCanonicalFile)
+                .getOrElse(sys.error(s"invalid path ${file.getCanonicalPath}"))
+            Result(name = name, path = path, location = value.location, gitInfo = info)
+          }
         }
       }
       .partitionMap(identity)
+      .pipe { x =>
+        x.copy(_2 = x._2.flatten)
+      }
   }
 
   private def gitInfo(file: File, startLine: Int, endLine: Int, conf: UnusedProtoInput): Option[GitInfo] = {
@@ -245,7 +255,7 @@ object FindUnusedProto {
           "-1",
           "--format=%cd",
           "--date=iso8601-strict",
-          s"-L${startLine},${endLine}:${file}"
+          s"-L${startLine},${endLine}:${file.getCanonicalPath}"
         ),
         Some(base)
       ).lazyLines_!.head
@@ -255,7 +265,7 @@ object FindUnusedProto {
           "log",
           "-1",
           "--format=%H",
-          s"-L${startLine},${endLine}:${file}"
+          s"-L${startLine},${endLine}:${file.getCanonicalPath}"
         ),
         Some(base)
       ).lazyLines_!.head
@@ -288,19 +298,23 @@ object FindUnusedProto {
     }.keys.toList.map { methodNameInScala =>
       val method = methods(methodNameInScala)
       val methodNameInProto = method.name
-      findProtoFile(base = conf.baseDirectory, f = method).map { file =>
-        val path =
-          IO.relativize(new File(conf.baseDirectory), file)
-            .getOrElse(sys.error(s"invalid path ${file.getCanonicalPath}"))
-        val info = gitInfo(
-          file = file,
-          startLine = method.location.startLine,
-          endLine = method.location.getEndLine,
-          conf = conf,
-        )
-        Result(name = methodNameInProto, path = path, location = method.location, gitInfo = info)
+      findProtoFile(conf = conf, f = method).map { files =>
+        files.map { file =>
+          val path =
+            IO.relativize(new File(conf.baseDirectory), file.getCanonicalFile)
+              .getOrElse(sys.error(s"invalid path ${file.getCanonicalPath}"))
+          val info = gitInfo(
+            file = file,
+            startLine = method.location.startLine,
+            endLine = method.location.getEndLine,
+            conf = conf,
+          )
+          Result(name = methodNameInProto, path = path, location = method.location, gitInfo = info)
+        }
       }
-    }.partitionMap(identity)
+    }.partitionMap(identity).pipe { x =>
+      x.copy(_2 = x._2.flatten)
+    }
   }
 
 }

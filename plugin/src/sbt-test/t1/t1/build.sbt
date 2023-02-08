@@ -16,6 +16,6 @@ TaskKey[Unit]("checkGitInfo") := {
     x.enums,
     x.messages,
   ).flatten.filter(_.gitInfo.exists(_.commit.nonEmpty)).map(_.name).toSet
-  val expect = Set("RpcMethodName1", "RpcMethodName3", "Enum1", "A")
+  val expect = Set("RpcMethodName1", "RpcMethodName3", "Enum1", "A", "Symlink")
   assert(names == expect, names)
 }

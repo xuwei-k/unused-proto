@@ -77,7 +77,7 @@ private[unused_proto] object JsonFormatInstances {
     implicit val dialect: JsonFormat[Dialect] =
       convertJsonFormat(implicitly[JsonFormat[String]])(Dialect.map, _.value)
 
-    caseClass7(UnusedProtoInput.apply, UnusedProtoInput.unapply)(
+    caseClass8(UnusedProtoInput.apply, UnusedProtoInput.unapply)(
       UnusedProtoInput.keys._1,
       UnusedProtoInput.keys._2,
       UnusedProtoInput.keys._3,
@@ -85,6 +85,7 @@ private[unused_proto] object JsonFormatInstances {
       UnusedProtoInput.keys._5,
       UnusedProtoInput.keys._6,
       UnusedProtoInput.keys._7,
+      UnusedProtoInput.keys._8,
     )
   }
 

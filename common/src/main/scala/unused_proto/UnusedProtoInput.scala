@@ -9,11 +9,21 @@ final case class UnusedProtoInput(
   protoInfo: ProtoValues[Def],
   output: String,
   dialect: Dialect,
-  git: Boolean
+  git: Boolean,
+  protoDirectories: List[String]
 )
 
 object UnusedProtoInput {
-  val keys = ("base", "external_proto_paths", "scala_files", "proto_info", "output", "dialect", "git")
+  val keys = (
+    "base",
+    "external_proto_paths",
+    "scala_files",
+    "proto_info",
+    "output",
+    "dialect",
+    "git",
+    "proto_directories"
+  )
 
   case class Def(name: String, location: Location, fileName: String)
   object Def {

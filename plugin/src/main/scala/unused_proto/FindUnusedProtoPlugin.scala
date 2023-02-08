@@ -10,7 +10,6 @@ import unused_proto.JsonFormatInstances.*
 object FindUnusedProtoPlugin extends AutoPlugin {
   object autoImport {
     val unusedProtoInfoAll = taskKey[ProtoValues[UnusedProtoInput.Def]]("aggregated proto info")
-    val unusedProtoExternalProtoAll = taskKey[List[String]]("")
     val unusedProtoOutput = settingKey[File]("output file")
     val unusedProto = taskKey[UnusedProtoOutput]("analyze usage in your project scala code by scalameta")
     val unusedProtoWarn = taskKey[Unit]("print unused proto message, enum and rpc")
@@ -98,26 +97,48 @@ object FindUnusedProtoPlugin extends AutoPlugin {
       .map(p => LocalProject(p.id))
   }
 
-  override def buildSettings: Seq[Def.Setting[?]] = Seq(
-    LocalRootProject / unusedProtoOutput := (LocalRootProject / target).value / "unused_proto.json",
-    LocalRootProject / unusedProtoExternalProtoAll := Def.taskDyn {
-      val base = (LocalRootProject / baseDirectory).value
-      val log = state.value.log
-      Def.taskDyn {
-        protoProjects
-          .map(
-            _.map(_ / PB.externalSourcePath).join.map(
+  private[this] val unusedProtoSourceDirAll = Def.taskDyn {
+    val base = (LocalRootProject / baseDirectory).value
+    val log = state.value.log
+    Def.taskDyn {
+      protoProjects
+        .map(
+          _.map(_ / Compile / PB.protoSources).join.map(
+            _.flatMap(
               _.flatMap(f =>
                 IO.relativize(base = base, file = f).orElse {
                   log.warn(s"invalid path ${f.getCanonicalPath}")
                   None
                 }
-              ).toList
-            )
+              )
+            ).toList
           )
-          .value
-      }
-    }.value,
+        )
+        .value
+    }
+  }
+
+  private[this] val unusedProtoExternalProtoAll = Def.taskDyn {
+    val base = (LocalRootProject / baseDirectory).value
+    val log = state.value.log
+    Def.taskDyn {
+      protoProjects
+        .map(
+          _.map(_ / PB.externalSourcePath).join.map(
+            _.flatMap(f =>
+              IO.relativize(base = base, file = f).orElse {
+                log.warn(s"invalid path ${f.getCanonicalPath}")
+                None
+              }
+            ).toList
+          )
+        )
+        .value
+    }
+  }
+
+  override def buildSettings: Seq[Def.Setting[?]] = Seq(
+    LocalRootProject / unusedProtoOutput := (LocalRootProject / target).value / "unused_proto.json",
     LocalRootProject / unusedProtoInput := Def.taskDyn {
       val s = state.value
       val extracted = Project.extract(s)
@@ -128,7 +149,8 @@ object FindUnusedProtoPlugin extends AutoPlugin {
         LocalProject(p.id) / Compile / unmanagedSources
       }.join.map(_.flatten)
       val all = (LocalRootProject / unusedProtoInfoAll).value
-      val externalProtoPaths = (LocalRootProject / unusedProtoExternalProtoAll).value
+      val externalProtoPaths = unusedProtoExternalProtoAll.value
+      val protoDirAll = unusedProtoSourceDirAll.value
       val dialect = (LocalRootProject / scalaBinaryVersion).value match {
         case "2.10" =>
           Dialect.Scala210
@@ -167,7 +189,8 @@ object FindUnusedProtoPlugin extends AutoPlugin {
           protoInfo = all,
           output = (LocalRootProject / unusedProtoOutput).value.getCanonicalPath,
           dialect = dialect,
-          git = true
+          git = true,
+          protoDirectories = protoDirAll
         )
       }
     }.value,

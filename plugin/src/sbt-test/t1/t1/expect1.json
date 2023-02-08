@@ -35,6 +35,17 @@
           "end_column" : 1
         },
         "git_info" : null
+      },
+      {
+        "name" : "Symlink",
+        "path" : "src/main/protobuf/symlink-dir/Symlink.proto",
+        "location" : {
+          "start_line" : 4,
+          "start_column" : 0,
+          "end_line" : null,
+          "end_column" : 18
+        },
+        "git_info" : null
       }
     ],
     "enums" : [
