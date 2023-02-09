@@ -248,6 +248,24 @@ object FindUnusedProto {
       ).isEmpty
     }
     Option.when(conf.git && new File(base, ".git").isDirectory && notExternal) {
+      val ignoreRevsFile = ".git-blame-ignore-revs"
+      if (new File(base, ignoreRevsFile).isFile) {
+        println("there is ignore-revs")
+        assert(
+          Process(
+            Seq(
+              "git",
+              "config",
+              "--local",
+              "blame.ignoreRevsFile",
+              ignoreRevsFile
+            ),
+            Some(base)
+          ).! == 0
+        )
+      } else {
+        println("no ignore-revs")
+      }
       val commitDateTime = Process(
         Seq(
           "git",

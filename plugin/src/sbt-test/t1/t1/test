@@ -17,3 +17,11 @@ $ exec git commit -am init
 > set libraryDependencies += "io.grpc" % "grpc-services" % scalapb.compiler.Version.grpcJavaVersion % "protobuf-src"
 > unusedProtoWarn
 > checkGitInfo
+
+> updateProto
+> checkGitInfoLastUpdated A
+
+> updateIgnoreRevs
+$ exec git log --stat
+$ exec cat .git/config
+> checkGitInfoLastUpdated RpcMethodName1 RpcMethodName3 Enum1 A Symlink
