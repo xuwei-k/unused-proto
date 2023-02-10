@@ -172,7 +172,7 @@ object FindUnusedProto {
       )
     )
     val jsonString =
-      implicitly[EncodeJson[UnusedProtoOutput]].encode(result).pretty(PrettyParams.spaces2)
+      implicitly[EncodeJson[UnusedProtoOutput]].encode(result).pretty(PrettyParams.spaces2.copy(dropNullKeys = true))
     Files.write(
       new File(conf.output).toPath,
       jsonString.getBytes(StandardCharsets.UTF_8)

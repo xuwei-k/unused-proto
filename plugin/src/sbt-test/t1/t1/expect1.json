@@ -7,10 +7,8 @@
         "location" : {
           "start_line" : 7,
           "start_column" : 2,
-          "end_line" : null,
           "end_column" : 78
-        },
-        "git_info" : null
+        }
       },
       {
         "name" : "RpcMethodName3",
@@ -18,10 +16,8 @@
         "location" : {
           "start_line" : 10,
           "start_column" : 2,
-          "end_line" : null,
           "end_column" : 78
-        },
-        "git_info" : null
+        }
       }
     ],
     "messages" : [
@@ -33,8 +29,7 @@
           "start_column" : 0,
           "end_line" : 7,
           "end_column" : 1
-        },
-        "git_info" : null
+        }
       },
       {
         "name" : "Symlink",
@@ -42,10 +37,8 @@
         "location" : {
           "start_line" : 4,
           "start_column" : 0,
-          "end_line" : null,
           "end_column" : 18
-        },
-        "git_info" : null
+        }
       }
     ],
     "enums" : [
@@ -57,8 +50,7 @@
           "start_column" : 0,
           "end_line" : 7,
           "end_column" : 1
-        },
-        "git_info" : null
+        }
       }
     ]
   },
