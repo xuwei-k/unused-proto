@@ -14,6 +14,8 @@ object FindUnusedProtoPlugin extends AutoPlugin {
     val unusedProto = taskKey[UnusedProtoOutput]("analyze usage in your project scala code by scalameta")
     val unusedProtoWarn = taskKey[Unit]("print unused proto message, enum and rpc")
     val unusedProtoInput = taskKey[UnusedProtoInput]("")
+    val unusedProtoScalametaVersion = settingKey[Option[String]]("")
+    val unusedProtoRunnerSettings = settingKey[Seq[String]]("")
   }
 
   import autoImport.*
@@ -50,7 +52,11 @@ object FindUnusedProtoPlugin extends AutoPlugin {
     launcher: File,
     forkOptions: ForkOptions,
     logLevel: String,
+    scalametaVersion: Option[String],
+    extraSettings: Seq[String],
   ): Int = {
+    val scalametaDep =
+      scalametaVersion.fold("")(v => s"""libraryDependencies += "org.scalameta" % "parsers_2.13" % "${v}"""")
     val buildSbt =
       s"""|name := "find-unused-proto-runner"
           |logLevel := Level.${logLevel}
@@ -60,6 +66,10 @@ object FindUnusedProtoPlugin extends AutoPlugin {
           |  "com.github.xuwei-k" % "unused-proto_3" % "${UnusedProtoBuildInfo.version}"
           |)
           |Compile / sources := Nil
+          |
+          |${scalametaDep}
+          |
+          |${extraSettings.mkString("\n\n")}
           |""".stripMargin
 
     IO.withTemporaryDirectory { dir =>
@@ -224,6 +234,7 @@ object FindUnusedProtoPlugin extends AutoPlugin {
       }
     }.value,
     LocalRootProject / unusedProto / forkOptions := ForkOptions(),
+    LocalRootProject / unusedProtoScalametaVersion := None,
     LocalRootProject / unusedProto := {
       val s = state.value
       val conf = (LocalRootProject / unusedProtoInput).value
@@ -240,7 +251,9 @@ object FindUnusedProtoPlugin extends AutoPlugin {
         logLevel = {
           val x = (LocalRootProject / unusedProto / logLevel).value.toString
           s"${x.head.toUpper}${x.tail}"
-        }
+        },
+        scalametaVersion = (LocalRootProject / unusedProtoScalametaVersion).?.value.flatten,
+        extraSettings = (LocalRootProject / unusedProtoRunnerSettings).?.value.toList.flatten,
       ) match {
         case 0 =>
           val x = decodeFromJsonFile[UnusedProtoOutput](new File(conf.output))
