@@ -150,3 +150,5 @@ ThisBuild / scalafixDependencies += "com.github.liancheng" %% "organize-imports"
 ThisBuild / semanticdbEnabled := true
 ThisBuild / scalafixOnCompile := true
 ThisBuild / scalafmtOnCompile := true
+
+scalaVersion := Scala212
