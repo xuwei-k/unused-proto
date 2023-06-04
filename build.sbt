@@ -150,6 +150,7 @@ lazy val core = project
 
 ThisBuild / scalafixDependencies += "com.github.xuwei-k" %% "scalafix-rules" % "0.2.13"
 ThisBuild / scalafixDependencies += "com.github.liancheng" %% "organize-imports" % "0.6.0"
+ThisBuild / semanticdbVersion := "4.7.8"
 ThisBuild / semanticdbEnabled := true
 ThisBuild / scalafixOnCompile := true
 ThisBuild / scalafmtOnCompile := true
