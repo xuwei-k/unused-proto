@@ -143,13 +143,13 @@ lazy val core = project
     libraryDependencies ++= Seq(
       "io.argonaut" %% "argonaut" % "6.3.8",
       "org.scala-sbt" %% "io" % "1.9.1",
-      "org.scalameta" %% "parsers" % "4.7.8" cross CrossVersion.for3Use2_13,
+      "org.scalameta" %% "parsers" % "4.8.2" cross CrossVersion.for3Use2_13,
     )
   )
   .dependsOn(LocalProject("common3"))
 
 ThisBuild / scalafixDependencies += "com.github.xuwei-k" %% "scalafix-rules" % "0.3.0"
-ThisBuild / semanticdbVersion := "4.7.8"
+ThisBuild / semanticdbVersion := "4.8.2"
 ThisBuild / semanticdbEnabled := true
 ThisBuild / scalafixOnCompile := true
 ThisBuild / scalafmtOnCompile := true
