@@ -143,7 +143,7 @@ lazy val core = project
     libraryDependencies ++= Seq(
       "io.argonaut" %% "argonaut" % "6.3.9",
       "org.scala-sbt" %% "io" % "1.9.7",
-      "org.scalameta" %% "parsers" % "4.8.13" cross CrossVersion.for3Use2_13,
+      "org.scalameta" %% "parsers" % "4.8.14" cross CrossVersion.for3Use2_13,
     )
   )
   .dependsOn(LocalProject("common3"))
