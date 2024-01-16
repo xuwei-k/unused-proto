@@ -148,7 +148,14 @@ lazy val core = project
   )
   .dependsOn(LocalProject("common3"))
 
-ThisBuild / scalafixDependencies += "com.github.xuwei-k" %% "scalafix-rules" % "0.3.0"
+ThisBuild / scalafixDependencies ++= {
+  scalaBinaryVersion.value match {
+    case "3" =>
+      Nil
+    case _ =>
+      Seq("com.github.xuwei-k" %% "scalafix-rules" % "0.3.0")
+  }
+}
 ThisBuild / semanticdbVersion := _root_.scalafix.sbt.BuildInfo.scalametaVersion
 ThisBuild / semanticdbEnabled := true
 ThisBuild / scalafixOnCompile := true
