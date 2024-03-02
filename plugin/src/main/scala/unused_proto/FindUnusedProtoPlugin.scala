@@ -1,8 +1,8 @@
 package unused_proto
 
 import java.nio.charset.StandardCharsets
-import sbt.Keys.*
 import sbt.*
+import sbt.Keys.*
 import sbtprotoc.ProtocPlugin.autoImport.PB
 import scala.collection.concurrent.TrieMap
 import unused_proto.JsonFormatInstances.*

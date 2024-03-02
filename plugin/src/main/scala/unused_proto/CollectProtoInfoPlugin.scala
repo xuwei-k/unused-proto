@@ -1,8 +1,8 @@
 package unused_proto
 
+import sbt.*
 import sbt.Def
 import sbt.Keys.*
-import sbt.*
 import sbtprotoc.ProtocPlugin
 import sbtprotoc.ProtocPlugin.autoImport.PB
 
