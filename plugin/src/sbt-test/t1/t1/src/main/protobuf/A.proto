@@ -5,6 +5,7 @@ package example;
 message A {
   string xxx = 1;
   int32 yyyy = 2;
+  optional string zz = 3;
 }
 
 message BBB {
