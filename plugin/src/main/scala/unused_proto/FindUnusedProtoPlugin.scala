@@ -56,7 +56,7 @@ object FindUnusedProtoPlugin extends AutoPlugin {
     extraSettings: Seq[String],
   ): Int = {
     val scalametaDep =
-      scalametaVersion.fold("")(v => s"""libraryDependencies += "org.scalameta" % "parsers_2.13" % "${v}"""")
+      scalametaVersion.fold("")(v => s"""dependencyOverrides += "org.scalameta" % "parsers_2.13" % "${v}"""")
     val buildSbt =
       s"""|name := "find-unused-proto-runner"
           |logLevel := Level.${logLevel}
