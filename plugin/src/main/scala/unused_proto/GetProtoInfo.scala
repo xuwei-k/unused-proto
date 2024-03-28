@@ -4,6 +4,7 @@ import com.google.protobuf.DescriptorProtos.FileDescriptorProto
 import com.google.protobuf.DescriptorProtos.ServiceDescriptorProto
 import com.google.protobuf.DescriptorProtos.SourceCodeInfo
 import com.google.protobuf.compiler.PluginProtos.*
+import com.google.protobuf.compiler.PluginProtos.CodeGeneratorResponse.Feature.FEATURE_PROTO3_OPTIONAL
 import java.nio.file.Files
 import java.util.Collections
 import protocbridge.ProtocCodeGenerator
@@ -23,7 +24,7 @@ case class GetProtoInfo(private val outputFile: File) extends ProtocCodeGenerato
     Files.write(outputFile.toPath, Collections.singletonList(names))
     // return empty response.
     // because this protoc-plugin does not generate any source code
-    CodeGeneratorResponse.newBuilder().build()
+    CodeGeneratorResponse.newBuilder().setSupportedFeatures(FEATURE_PROTO3_OPTIONAL.getNumber).build()
   }
 
   private[this] def locationFromProto(p: SourceCodeInfo.Location): Option[Location] =
