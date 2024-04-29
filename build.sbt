@@ -1,6 +1,6 @@
 import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations.*
 
-def Scala212 = "2.12.19"
+def Scala212 = "2.13.14"
 def Scala3 = "3.3.3"
 
 val commonSettings = Def.settings(
