@@ -141,7 +141,7 @@ lazy val core = project
     name := "unused-proto",
     description := "find unused proto",
     libraryDependencies ++= Seq(
-      "io.argonaut" %% "argonaut" % "6.3.9",
+      "io.argonaut" %% "argonaut" % "6.3.10",
       "org.scala-sbt" %% "io" % "1.10.0",
       "org.scalameta" %% "parsers" % "4.9.5" cross CrossVersion.for3Use2_13,
     )
