@@ -153,7 +153,7 @@ ThisBuild / scalafixDependencies ++= {
     case "3" =>
       Nil
     case _ =>
-      Seq("com.github.xuwei-k" %% "scalafix-rules" % "0.4.3")
+      Seq("com.github.xuwei-k" %% "scalafix-rules" % "0.4.4")
   }
 }
 ThisBuild / semanticdbVersion := _root_.scalafix.sbt.BuildInfo.scalametaVersion
