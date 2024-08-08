@@ -35,7 +35,7 @@ object CollectProtoInfoPlugin extends AutoPlugin {
       }
     },
     Compile / PB.targets ++= Seq[protocbridge.Target](
-      GetProtoInfo(protoInfoFile.value) -> (Compile / sourceManaged).value,
+      GetProtoInfo(protoInfoFile.value) -> ((Compile / sourceManaged).value / "unused_proto"),
     )
   )
 }
