@@ -100,7 +100,7 @@ lazy val plugin = project
     },
     libraryDependencies ++= Seq(
       "com.thesamet.scalapb" %% "protoc-bridge" % "0.9.7",
-      "com.google.protobuf" % "protobuf-java" % "3.25.5",
+      "com.google.protobuf" % "protobuf-java" % "4.28.3",
     ),
     addSbtPlugin("com.thesamet" % "sbt-protoc" % "1.0.7"),
     name := "unused-proto-plugin",
