@@ -99,7 +99,7 @@ lazy val plugin = project
       sys.env.isDefinedAt("GITHUB_ACTION") || isSnapshot.value
     },
     libraryDependencies ++= Seq(
-      "com.thesamet.scalapb" %% "protoc-bridge" % "0.9.7",
+      "com.thesamet.scalapb" %% "protoc-bridge" % "0.9.8",
       "com.google.protobuf" % "protobuf-java" % "3.25.5",
     ),
     addSbtPlugin("com.thesamet" % "sbt-protoc" % "1.0.7"),
