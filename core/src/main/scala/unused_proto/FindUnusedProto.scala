@@ -16,10 +16,10 @@ import java.util.stream.Collectors
 import sbt.io.IO
 import scala.jdk.CollectionConverters.*
 import scala.meta.Source
+import scala.meta.Tree
 import scala.meta.Type
 import scala.meta.inputs.Input
 import scala.meta.parsers.Parse
-import scala.meta.transversers.XtensionCollectionLikeUI
 import scala.sys.process.Process
 import scala.util.chaining.*
 import unused_proto.UnusedProtoOutput.GitInfo
@@ -120,6 +120,20 @@ object FindUnusedProto {
       case Dialect.Scala3 =>
         scala.meta.dialects.Scala3
     }
+
+  private implicit class TreeOps(private val tree: Tree) extends AnyVal {
+    def collect[B](pf: PartialFunction[Tree, B]): List[B] = {
+      val builder = List.newBuilder[B]
+      def loop(t: Tree): Unit = {
+        if (pf.isDefinedAt(t)) {
+          builder += pf(t)
+        }
+        t.children.foreach(loop)
+      }
+      loop(tree)
+      builder.result()
+    }
+  }
 
   def main(args: Array[String]): Unit = try {
     val in = {
