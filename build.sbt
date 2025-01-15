@@ -151,9 +151,9 @@ lazy val core = project
 ThisBuild / scalafixDependencies += {
   scalaBinaryVersion.value match {
     case "2.12" =>
-      "com.github.xuwei-k" %% "scalafix-rules" % "0.5.1"
+      "com.github.xuwei-k" %% "scalafix-rules" % "0.6.0"
     case _ =>
-      "com.github.xuwei-k" % "scalafix-rules_2.13" % "0.5.1"
+      "com.github.xuwei-k" % "scalafix-rules_2.13" % "0.6.0"
   }
 }
 ThisBuild / semanticdbVersion := _root_.scalafix.sbt.BuildInfo.scalametaVersion
