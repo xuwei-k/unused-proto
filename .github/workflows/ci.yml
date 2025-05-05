@@ -22,7 +22,7 @@ jobs:
         java-version: ${{ matrix.java }}
         distribution: temurin
     - uses: sbt/setup-sbt@v1
-    - uses: coursier/cache-action@142d2738bd29f0eb9d44610828acb3a19809feab # v6.4.6
+    - uses: coursier/cache-action@4e2615869d13561d626ed48655e1a39e5b192b3c # v6.4.7
     - run: sbt -v scalafmtSbtCheck scalafmtCheckAll "scalafixAll --check" test publishLocal scripted
     - if: always()
       run: rm -rf "$HOME/.ivy2/local" || true
