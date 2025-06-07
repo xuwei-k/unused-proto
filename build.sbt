@@ -75,7 +75,7 @@ commonSettings
 publish / skip := true
 
 // for scala-steward
-val scalapb = "com.thesamet.scalapb" %% "scalapb-runtime" % "0.11.17" % "runtime"
+val scalapb = "com.thesamet.scalapb" %% "scalapb-runtime" % "0.11.18" % "runtime"
 
 libraryDependencies += scalapb
 
