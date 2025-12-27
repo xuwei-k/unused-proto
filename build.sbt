@@ -4,7 +4,7 @@ def Scala212 = "2.12.21"
 def Scala3 = "3.3.7"
 
 val commonSettings = Def.settings(
-  publishTo := sonatypePublishToBundle.value,
+  publishTo := (if (isSnapshot.value) None else localStaging.value),
   Compile / unmanagedResources += (LocalRootProject / baseDirectory).value / "LICENSE.txt",
   Compile / packageSrc / mappings ++= (Compile / managedSources).value.map { f =>
     (f, f.relativeTo((Compile / sourceManaged).value).get.getPath)
@@ -64,7 +64,7 @@ releaseProcess := Seq[ReleaseStep](
   releaseStepCommandAndRemaining("set ThisBuild / useSuperShell := false"),
   releaseStepCommandAndRemaining("publishSigned"),
   releaseStepCommandAndRemaining("set ThisBuild / useSuperShell := true"),
-  releaseStepCommandAndRemaining("sonatypeBundleRelease"),
+  releaseStepCommandAndRemaining("sonaRelease"),
   setNextVersion,
   commitNextVersion,
   pushChanges
