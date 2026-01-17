@@ -1,6 +1,6 @@
-import example.Service2Grpc.Service2
-import example.BBB
 import com.google.protobuf.empty.Empty
+import example.BBB
+import example.Service2Grpc.Service2
 import scala.concurrent.Future
 
 object Main {
