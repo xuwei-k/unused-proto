@@ -6,9 +6,6 @@ def Scala3 = "3.3.7"
 val commonSettings = Def.settings(
   publishTo := (if (isSnapshot.value) None else localStaging.value),
   Compile / unmanagedResources += (LocalRootProject / baseDirectory).value / "LICENSE.txt",
-  Compile / packageSrc / mappings ++= (Compile / managedSources).value.map { f =>
-    (f, f.relativeTo((Compile / sourceManaged).value).get.getPath)
-  },
   Compile / doc / scalacOptions ++= {
     val hash = sys.process.Process("git rev-parse HEAD").lineStream_!.head
     if (scalaBinaryVersion.value != "3") {
