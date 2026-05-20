@@ -207,7 +207,7 @@ object FindUnusedProto {
           { (path, attributes) =>
             attributes.isRegularFile && (path.toFile.getName == f.fileName.split('/').last) && {
               val lines = Files.readAllLines(path).asScala.lift
-              lines(f.location.startLine).exists(_ contains f.name)
+              lines(f.location.startLine).exists(_.contains(f.name))
             }
           },
           FileVisitOption.FOLLOW_LINKS,
