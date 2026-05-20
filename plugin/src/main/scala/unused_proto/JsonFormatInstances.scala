@@ -32,7 +32,7 @@ private[unused_proto] object JsonFormatInstances {
     }
   }
 
-  private[this] implicit val locationInstance: JsonFormat[Location] = {
+  private implicit val locationInstance: JsonFormat[Location] = {
     import sjsonnew.BasicJsonProtocol.*
 
     caseClass4(Location.apply, (_: Location).asTupleOption)(
@@ -63,7 +63,7 @@ private[unused_proto] object JsonFormatInstances {
     )
   }
 
-  private[this] def convertJsonFormat[A, B](f: JsonFormat[A])(f1: A => B, f2: B => A): JsonFormat[B] =
+  private def convertJsonFormat[A, B](f: JsonFormat[A])(f1: A => B, f2: B => A): JsonFormat[B] =
     new JsonFormat[B] {
       override def write[J](obj: B, builder: Builder[J]) =
         f.write(f2(obj), builder)

@@ -16,7 +16,7 @@ case class GetProtoInfo(private val outputFile: File) extends ProtocCodeGenerato
   override def run(req: Array[Byte]): Array[Byte] =
     run(CodeGeneratorRequest.parseFrom(req)).toByteArray
 
-  private[this] def run(req: CodeGeneratorRequest): CodeGeneratorResponse = {
+  private def run(req: CodeGeneratorRequest): CodeGeneratorResponse = {
     val toGenerate = req.getFileToGenerateList.asScala.toSet
     val files = req.getProtoFileList.asScala.filter(p => toGenerate.contains(p.getName))
     import JsonFormatInstances.*
@@ -27,7 +27,7 @@ case class GetProtoInfo(private val outputFile: File) extends ProtocCodeGenerato
     CodeGeneratorResponse.newBuilder().setSupportedFeatures(FEATURE_PROTO3_OPTIONAL.getNumber).build()
   }
 
-  private[this] def locationFromProto(p: SourceCodeInfo.Location): Option[Location] =
+  private def locationFromProto(p: SourceCodeInfo.Location): Option[Location] =
     PartialFunction.condOpt(p.getSpanList.asScala.toList) {
       case List(startLine, startColumn, endLine, endColumn) =>
         Location(
@@ -47,7 +47,7 @@ case class GetProtoInfo(private val outputFile: File) extends ProtocCodeGenerato
 
   private case class MethodIndex(service: Int, method: Int)
 
-  private[this] def run0(files: collection.Seq[FileDescriptorProto]): ProtoValues[Def] = {
+  private def run0(files: collection.Seq[FileDescriptorProto]): ProtoValues[Def] = {
     ProtoValues(
       methods = files.flatMap { f =>
         val locations = f.getSourceCodeInfo.getLocationList.asScala.flatMap { location =>
