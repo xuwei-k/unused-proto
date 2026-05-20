@@ -1,5 +1,25 @@
+val workaroundScalaPB2112 = Def.setting {
+  // https://github.com/scalapb/ScalaPB/pull/2112
+  val v = sbtBinaryVersion.value match {
+    case "1.0" =>
+      "2.12"
+    case "2" =>
+      "3"
+  }
+  protocbridge.SandboxedJvmGenerator.forModule(
+    "scala",
+    protocbridge.Artifact(
+      "com.thesamet.scalapb",
+      s"compilerplugin_${v}",
+      scalapb.compiler.Version.scalapbVersion
+    ),
+    "scalapb.ScalaPbCodeGenerator$",
+    scalapb.ScalaPbCodeGenerator.suggestedDependencies
+  )
+}
+
 Compile / PB.targets ++= Seq[protocbridge.Target](
-  scalapb.gen(grpc = true, flatPackage = true) -> (Compile / sourceManaged).value / "scalapb"
+  scalapb.gen(grpc = true, flatPackage = true).copy(_1 = workaroundScalaPB2112.value) -> (Compile / sourceManaged).value / "scalapb"
 )
 
 unusedProto / logLevel := Level.Info

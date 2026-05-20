@@ -7,6 +7,7 @@ import sbtprotoc.ProtocPlugin.autoImport.PB
 
 object CollectProtoInfoPlugin extends AutoPlugin {
   object autoImport {
+    @transient
     val unusedProtoInfo = taskKey[ProtoValues[UnusedProtoInput.Def]]("input proto file info each project")
   }
 

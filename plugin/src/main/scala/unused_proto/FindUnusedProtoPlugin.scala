@@ -3,16 +3,22 @@ package unused_proto
 import java.nio.charset.StandardCharsets
 import sbt.*
 import sbt.Keys.*
+import sbtcompat.PluginCompat.*
 import sbtprotoc.ProtocPlugin.autoImport.PB
 import scala.collection.concurrent.TrieMap
 import unused_proto.JsonFormatInstances.*
 
 object FindUnusedProtoPlugin extends AutoPlugin {
   object autoImport {
+    @transient
     val unusedProtoInfoAll = taskKey[ProtoValues[UnusedProtoInput.Def]]("aggregated proto info")
+    @transient
     val unusedProtoOutput = settingKey[File]("output file")
+    @transient
     val unusedProto = taskKey[UnusedProtoOutput]("analyze usage in your project scala code by scalameta")
+    @transient
     val unusedProtoWarn = taskKey[Unit]("print unused proto message, enum and rpc")
+    @transient
     val unusedProtoInput = taskKey[UnusedProtoInput]("")
     val unusedProtoScalametaVersion = settingKey[Option[String]]("")
     val unusedProtoRunnerSettings = settingKey[Seq[String]]("")
@@ -148,7 +154,7 @@ object FindUnusedProtoPlugin extends AutoPlugin {
   }
 
   override def buildSettings: Seq[Def.Setting[?]] = Seq(
-    LocalRootProject / unusedProtoOutput := (LocalRootProject / target).value / "unused_proto.json",
+    LocalRootProject / unusedProtoOutput := file("target") / "unused_proto.json",
     LocalRootProject / unusedProtoInput := Def.taskDyn {
       val s = state.value
       val extracted = Project.extract(s)
@@ -233,7 +239,7 @@ object FindUnusedProtoPlugin extends AutoPlugin {
           }
       }
     }.value,
-    LocalRootProject / unusedProto / forkOptions := ForkOptions(),
+    LocalRootProject / unusedProto / forkOptions := Def.uncached(ForkOptions()),
     LocalRootProject / unusedProtoScalametaVersion := None,
     LocalRootProject / unusedProto := {
       val s = state.value
