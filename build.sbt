@@ -30,6 +30,7 @@ val commonSettings = Def.settings(
       Nil
     } else {
       Seq(
+        "-release:8",
         "-Xsource:3",
       )
     }
