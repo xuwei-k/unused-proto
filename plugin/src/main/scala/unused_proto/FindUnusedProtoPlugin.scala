@@ -29,12 +29,12 @@ object FindUnusedProtoPlugin extends AutoPlugin {
   override def trigger: PluginTrigger = allRequirements
 
   // https://github.com/scala/bug/issues/11284
-  private[this] type AsComparable[A] = A => Comparable[? >: A]
+  private type AsComparable[A] = A => Comparable[? >: A]
 
-  private[this] implicit def orderingFromJavaComparable[A](implicit asComparable: AsComparable[A]): Ordering[A] =
+  private implicit def orderingFromJavaComparable[A](implicit asComparable: AsComparable[A]): Ordering[A] =
     (x: A, y: A) => asComparable(x).compareTo(y)
 
-  private[this] val sbtLauncher: Def.Initialize[Task[File]] = Def.task {
+  private val sbtLauncher: Def.Initialize[Task[File]] = Def.task {
     val Seq(launcher) = (LocalRootProject / dependencyResolution).value
       .retrieve(
         dependencyId = "org.scala-sbt" % "sbt-launch" % (LocalRootProject / unusedProto / sbtVersion).value,
@@ -52,7 +52,7 @@ object FindUnusedProtoPlugin extends AutoPlugin {
   // avoid extraProjects and derivedProjects
   // https://github.com/sbt/sbt/issues/6860
   // https://github.com/sbt/sbt/issues/4947
-  private[this] def run(
+  private def run(
     base: File,
     config: UnusedProtoInput,
     launcher: File,
@@ -98,7 +98,7 @@ object FindUnusedProtoPlugin extends AutoPlugin {
     }
   }
 
-  private[this] val protoProjects: Def.Initialize[Task[List[LocalProject]]] = Def.task {
+  private val protoProjects: Def.Initialize[Task[List[LocalProject]]] = Def.task {
     val s = state.value
     val extracted = Project.extract(s)
     val currentBuildUri = extracted.currentRef.build
@@ -113,7 +113,7 @@ object FindUnusedProtoPlugin extends AutoPlugin {
       .map(p => LocalProject(p.id))
   }
 
-  private[this] val unusedProtoSourceDirAll = Def.taskDyn {
+  private val unusedProtoSourceDirAll = Def.taskDyn {
     val base = (LocalRootProject / baseDirectory).value
     val log = state.value.log
     Def.taskDyn {
@@ -134,7 +134,7 @@ object FindUnusedProtoPlugin extends AutoPlugin {
     }
   }
 
-  private[this] val unusedProtoExternalProtoAll = Def.taskDyn {
+  private val unusedProtoExternalProtoAll = Def.taskDyn {
     val base = (LocalRootProject / baseDirectory).value
     val log = state.value.log
     Def.taskDyn {

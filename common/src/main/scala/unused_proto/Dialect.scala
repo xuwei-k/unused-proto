@@ -14,7 +14,7 @@ object Dialect {
   case object Scala213Source3 extends Dialect("Scala213Source3")
   case object Scala3 extends Dialect("Scala3")
 
-  private[this] val all: Seq[Dialect] = Seq(
+  private val all: Seq[Dialect] = Seq(
     Scala210,
     Scala211,
     Scala212,
