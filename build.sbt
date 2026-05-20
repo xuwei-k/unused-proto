@@ -19,7 +19,11 @@ val commonSettings = Def.settings(
         s"https://github.com/xuwei-k/unused-proto/blob/${hash}€{FILE_PATH}.scala"
       )
     } else {
-      Nil
+      Seq(
+        "-source-links:github://xuwei-k/unused-proto",
+        "-revision",
+        hash,
+      )
     }
   },
   scalacOptions ++= Seq(
