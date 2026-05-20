@@ -1,7 +1,9 @@
 import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations.*
 
+def sbt2 = "2.0.0-RC13"
+
 def Scala212 = "2.12.21"
-def Scala3 = "3.3.7"
+val Scala3: String = scala_version_from_sbt_version.ScalaVersionFromSbtVersion(sbt2)
 
 val commonSettings = Def.settings(
   publishTo := (if (isSnapshot.value) None else localStaging.value),
@@ -81,17 +83,37 @@ val scalapb = "com.thesamet.scalapb" %% "scalapb-runtime" % "0.11.20" % "runtime
 
 libraryDependencies += scalapb
 
-lazy val plugin = project
+lazy val plugin = projectMatrix
   .in(file("plugin"))
   .enablePlugins(ScriptedPlugin)
-  .dependsOn(LocalProject("common2_12"))
+  .defaultAxes(VirtualAxis.jvm)
+  .jvmPlatform(Seq(Scala212, Scala3))
+  .dependsOn(common)
   .settings(
     commonSettings,
-    scalaVersion := Scala212,
+    libraryDependencies += "com.github.xuwei-k" %% "unapply" % "0.1.0",
+    addSbtPlugin("com.github.sbt" % "sbt2-compat" % "0.1.0"),
+    pluginCrossBuild / sbtVersion := {
+      scalaBinaryVersion.value match {
+        case "2.12" =>
+          sbtVersion.value
+        case _ =>
+          sbt2
+      }
+    },
     description := "find unused proto sbt plugin",
     scriptedLaunchOpts ++= Seq[(String, String)](
       ("plugin.version", version.value),
-      ("scalapb.version", scalapb.revision),
+      (
+        "scalapb.version", {
+          scalaBinaryVersion.value match {
+            case "2.12" =>
+              scalapb.revision
+            case "3" =>
+              "1.0.0-alpha.4"
+          }
+        }
+      ),
     ).map { case (k, v) =>
       s"-D${k}=${v}"
     },
@@ -104,7 +126,19 @@ lazy val plugin = project
       "com.thesamet.scalapb" %% "protoc-bridge" % "0.9.9",
       "com.google.protobuf" % "protobuf-java" % "3.25.9",
     ),
-    addSbtPlugin("com.thesamet" % "sbt-protoc" % "1.0.8"),
+    libraryDependencies += {
+      val v = (pluginCrossBuild / sbtBinaryVersion).value match {
+        case "1.0" =>
+          "1.0.8"
+        case "2" =>
+          "1.1.0-RC1"
+      }
+      Defaults.sbtPluginExtra(
+        "com.thesamet" % "sbt-protoc" % v,
+        (pluginCrossBuild / sbtBinaryVersion).value,
+        (update / scalaBinaryVersion).value,
+      )
+    },
     name := "unused-proto-plugin",
     moduleName := "unused-proto-plugin",
   )

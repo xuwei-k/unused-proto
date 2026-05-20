@@ -1,5 +1,6 @@
 package unused_proto
 
+import _root_.unapply.syntax.*
 import java.io.File
 import sjsonnew.Builder
 import sjsonnew.JsonFormat
@@ -34,7 +35,7 @@ private[unused_proto] object JsonFormatInstances {
   private[this] implicit val locationInstance: JsonFormat[Location] = {
     import sjsonnew.BasicJsonProtocol.*
 
-    caseClass4(Location.apply, Location.unapply)(
+    caseClass4(Location.apply, (_: Location).asTupleOption)(
       Location.keys._1,
       Location.keys._2,
       Location.keys._3,
@@ -45,7 +46,7 @@ private[unused_proto] object JsonFormatInstances {
   implicit val defInstance: JsonFormat[UnusedProtoInput.Def] = {
     import sjsonnew.BasicJsonProtocol.*
 
-    caseClass3(UnusedProtoInput.Def.apply, UnusedProtoInput.Def.unapply)(
+    caseClass3(UnusedProtoInput.Def.apply, (_: UnusedProtoInput.Def).asTupleOption)(
       UnusedProtoInput.Def.keys._1,
       UnusedProtoInput.Def.keys._2,
       UnusedProtoInput.Def.keys._3,
@@ -55,7 +56,7 @@ private[unused_proto] object JsonFormatInstances {
   implicit def protoValuesInstances[A: JsonFormat]: JsonFormat[ProtoValues[A]] = {
     import sjsonnew.BasicJsonProtocol.*
 
-    caseClass3(ProtoValues.apply[A], ProtoValues.unapply[A])(
+    caseClass3(ProtoValues.apply[A], (_: ProtoValues[A]).asTupleOption)(
       ProtoValues.keys._1,
       ProtoValues.keys._2,
       ProtoValues.keys._3,
@@ -77,7 +78,7 @@ private[unused_proto] object JsonFormatInstances {
     implicit val dialect: JsonFormat[Dialect] =
       convertJsonFormat(implicitly[JsonFormat[String]])(Dialect.map, _.value)
 
-    caseClass8(UnusedProtoInput.apply, UnusedProtoInput.unapply)(
+    caseClass8(UnusedProtoInput.apply, (_: UnusedProtoInput).asTupleOption)(
       UnusedProtoInput.keys._1,
       UnusedProtoInput.keys._2,
       UnusedProtoInput.keys._3,
@@ -93,13 +94,13 @@ private[unused_proto] object JsonFormatInstances {
     import sjsonnew.BasicJsonProtocol.*
 
     implicit val gitInto: JsonFormat[UnusedProtoOutput.GitInfo] =
-      caseClass2(UnusedProtoOutput.GitInfo.apply, UnusedProtoOutput.GitInfo.unapply)(
+      caseClass2(UnusedProtoOutput.GitInfo.apply, (_: UnusedProtoOutput.GitInfo).asTupleOption)(
         UnusedProtoOutput.GitInfo.keys._1,
         UnusedProtoOutput.GitInfo.keys._2,
       )
 
     implicit val result: JsonFormat[UnusedProtoOutput.Result] =
-      caseClass4(UnusedProtoOutput.Result.apply, UnusedProtoOutput.Result.unapply)(
+      caseClass4(UnusedProtoOutput.Result.apply, (_: UnusedProtoOutput.Result).asTupleOption)(
         UnusedProtoOutput.Result.keys._1,
         UnusedProtoOutput.Result.keys._2,
         UnusedProtoOutput.Result.keys._3,
@@ -107,11 +108,11 @@ private[unused_proto] object JsonFormatInstances {
       )
 
     implicit val log: JsonFormat[UnusedProtoOutput.Log] =
-      caseClass1(UnusedProtoOutput.Log.apply, UnusedProtoOutput.Log.unapply)(
+      caseClass1(UnusedProtoOutput.Log.apply, (_: UnusedProtoOutput.Log).asTupleOption)(
         UnusedProtoOutput.Log.keys._1,
       )
 
-    caseClass2(UnusedProtoOutput.apply, UnusedProtoOutput.unapply)(
+    caseClass2(UnusedProtoOutput.apply, (_: UnusedProtoOutput).asTupleOption)(
       UnusedProtoOutput.keys._1,
       UnusedProtoOutput.keys._2,
     )
