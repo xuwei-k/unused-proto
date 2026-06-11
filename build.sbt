@@ -177,7 +177,7 @@ lazy val core = project
     name := "unused-proto",
     description := "find unused proto",
     libraryDependencies ++= Seq(
-      "io.github.argonaut-io" %% "argonaut" % "6.3.12",
+      "io.github.argonaut-io" %% "argonaut" % "6.3.13",
       "org.scala-sbt" %% "io" % "1.12.1",
       "org.scalameta" %% "parsers" % "4.17.0",
     )
