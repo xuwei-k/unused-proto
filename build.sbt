@@ -91,7 +91,7 @@ lazy val plugin = projectMatrix
   .dependsOn(common)
   .settings(
     commonSettings,
-    libraryDependencies += "com.github.xuwei-k" %% "unapply" % "0.1.0",
+    libraryDependencies += "com.github.xuwei-k" %% "unapply" % "0.2.0",
     addSbtPlugin("com.github.sbt" % "sbt2-compat" % "0.1.0"),
     pluginCrossBuild / sbtVersion := {
       scalaBinaryVersion.value match {
