@@ -1,15 +1,16 @@
 import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations.*
 
 def sbt2 = "2.0.0"
+def sbt1 = "1.12.12"
 
-def Scala212 = "2.12.21"
+val Scala212: String = scala_version_from_sbt_version.ScalaVersionFromSbtVersion(sbt1)
 val Scala3: String = scala_version_from_sbt_version.ScalaVersionFromSbtVersion(sbt2)
 
 val commonSettings = Def.settings(
   publishTo := (if (isSnapshot.value) None else localStaging.value),
   Compile / unmanagedResources += (LocalRootProject / baseDirectory).value / "LICENSE.txt",
   Compile / doc / scalacOptions ++= {
-    val hash = sys.process.Process("git rev-parse HEAD").lineStream_!.head
+    val hash = sys.process.Process("git rev-parse HEAD").lazyLines_!.head
     if (scalaBinaryVersion.value != "3") {
       Seq(
         "-sourcepath",
@@ -58,28 +59,28 @@ val commonSettings = Def.settings(
   ),
 )
 
-releaseProcess := Seq[ReleaseStep](
-  checkSnapshotDependencies,
-  inquireVersions,
-  runClean,
-  setReleaseVersion,
-  commitReleaseVersion,
-  tagRelease,
-  releaseStepCommandAndRemaining("publishSigned"),
-  releaseStepCommandAndRemaining("sonaRelease"),
-  setNextVersion,
-  commitNextVersion,
-  pushChanges
-)
-
-commonSettings
-
-publish / skip := true
-
 // for scala-steward
 val scalapb = "com.thesamet.scalapb" %% "scalapb-runtime" % "0.11.20" % "runtime"
 
-libraryDependencies += scalapb
+lazy val unusedProtoRoot = rootProject.autoAggregate.settings(
+  commonSettings,
+  releaseProcess := Seq[ReleaseStep](
+    checkSnapshotDependencies,
+    inquireVersions,
+    runClean,
+    setReleaseVersion,
+    commitReleaseVersion,
+    tagRelease,
+    releaseStepCommandAndRemaining("publishSigned"),
+    releaseStepCommandAndRemaining("sonaRelease"),
+    setNextVersion,
+    commitNextVersion,
+    pushChanges
+  ),
+  publish / skip := true,
+  scalaVersion := Scala3,
+  libraryDependencies += scalapb,
+)
 
 lazy val plugin = projectMatrix
   .in(file("plugin"))
@@ -94,8 +95,8 @@ lazy val plugin = projectMatrix
     pluginCrossBuild / sbtVersion := {
       scalaBinaryVersion.value match {
         case "2.12" =>
-          sbtVersion.value
-        case _ =>
+          sbt1
+        case "3" =>
           sbt2
       }
     },
@@ -182,5 +183,3 @@ lazy val core = project
 ThisBuild / scalafixDependencies += "com.github.xuwei-k" %% "scalafix-rules" % "0.6.28"
 ThisBuild / scalafixOnCompile := true
 ThisBuild / scalafmtOnCompile := true
-
-scalaVersion := Scala212
