@@ -117,9 +117,6 @@ lazy val plugin = projectMatrix
     },
     scriptedBufferLog := false,
     sbtPlugin := true,
-    sbtPluginPublishLegacyMavenStyle := {
-      sys.env.isDefinedAt("GITHUB_ACTION") || isSnapshot.value
-    },
     libraryDependencies ++= Seq(
       "com.thesamet.scalapb" %% "protoc-bridge" % "0.9.9",
       "com.google.protobuf" % "protobuf-java" % "3.25.9",
