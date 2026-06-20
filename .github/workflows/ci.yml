@@ -25,6 +25,13 @@ jobs:
         distribution: temurin
     - uses: sbt/setup-sbt@v1
     - uses: coursier/cache-action@95e5b1029b6b86e7bac033ee44a0697d8a527d2d # v8.1.1
-    - run: sbt -v scalafmtSbtCheck scalafmtCheckAll "scalafixAll --check" test publishLocal scripted
+    - run: sbt
+           -v
+           --server
+           "all scalafmtSbtCheck scalafmtCheckAll"
+           "scalafixAll --check"
+           test
+           publishLocal
+           scripted
     - if: always()
       run: rm -rf "$HOME/.ivy2/local" || true
