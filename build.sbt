@@ -119,7 +119,7 @@ lazy val plugin = projectMatrix
     scriptedBufferLog := false,
     sbtPlugin := true,
     libraryDependencies ++= Seq(
-      "com.thesamet.scalapb" %% "protoc-bridge" % "0.9.9",
+      "com.thesamet.scalapb" %% "protoc-bridge" % "0.9.10",
       "com.google.protobuf" % "protobuf-java" % "3.25.9",
     ),
     libraryDependencies += {
