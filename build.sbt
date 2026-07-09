@@ -180,6 +180,6 @@ lazy val core = project
   )
   .dependsOn(LocalProject("common3"))
 
-ThisBuild / scalafixDependencies += "com.github.xuwei-k" %% "scalafix-rules" % "0.6.28"
+ThisBuild / scalafixDependencies += "com.github.xuwei-k" %% "scalafix-rules" % "0.6.29"
 ThisBuild / scalafixOnCompile := true
 ThisBuild / scalafmtOnCompile := true
