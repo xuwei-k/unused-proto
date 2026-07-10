@@ -19,7 +19,9 @@ val workaroundScalaPB2112 = Def.setting {
 }
 
 Compile / PB.targets ++= Seq[protocbridge.Target](
-  scalapb.gen(grpc = true, flatPackage = true).copy(_1 = workaroundScalaPB2112.value) -> (Compile / sourceManaged).value / "scalapb"
+  scalapb
+    .gen(grpc = true, flatPackage = true)
+    .copy(_1 = workaroundScalaPB2112.value) -> (Compile / sourceManaged).value / "scalapb"
 )
 
 unusedProto / logLevel := Level.Info
