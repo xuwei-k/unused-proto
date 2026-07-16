@@ -113,7 +113,7 @@ lazy val plugin = projectMatrix
             case "2.12" =>
               scalapb.revision
             case "3" =>
-              "1.0.0-alpha.4"
+              "1.0.0-alpha.6"
           }
         }
       ),
@@ -131,7 +131,7 @@ lazy val plugin = projectMatrix
         case "1.0" =>
           "1.0.8"
         case "2" =>
-          "1.1.0-RC1"
+          "1.1.0-RC2"
       }
       Defaults.sbtPluginExtra(
         "com.thesamet" % "sbt-protoc" % v,
