@@ -1,7 +1,7 @@
 package unused_proto
 
 /**
- * [[https://github.com/scalameta/scalameta/blob/v4.17.2/scalameta/dialects2/shared/src/main/scala/scala/meta/Dialect.scala]]
+ * [[https://github.com/scalameta/scalameta/blob/v4.17.3/scalameta/dialects2/shared/src/main/scala/scala/meta/Dialect.scala]]
  */
 sealed abstract class Dialect(val value: String) extends Product with Serializable
 
