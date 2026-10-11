@@ -57,7 +57,7 @@ val commonSettings = Def.settings(
     </scm>
   ),
   organization := "com.github.xuwei-k",
-  homepage := Some(url("https://github.com/xuwei-k/unused-proto")),
+  homepage := Some(uri("https://github.com/xuwei-k/unused-proto")),
   licenses := List(
     "MIT License" -> uri("https://opensource.org/licenses/mit-license")
   ),
